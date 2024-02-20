@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteComment, editComment } from "../redux/modules/commentListSlice";
 import { getFormattedDate } from "../util/date";
 import CommentItem from "../components/comment/CommentItem";
+import useNavigateLogin from "../hooks/useNavigateLogin";
 // import { defaultAvatar } from "src/assets/default-avatar.png";
 
 function Detail() {
@@ -50,6 +51,9 @@ function Detail() {
 		setIsEditing(false);
 		setEditingText("");
 	};
+
+	// custom hook 사용 - 로그인 안한 상태일 시 로그인페이지로 이동
+	useNavigateLogin();
 
 	return (
 		<S.LayoutDiv>
