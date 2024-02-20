@@ -5,7 +5,7 @@ import Footer from "../components/layout/Footer";
 import { useParams } from "react-router-dom";
 import * as S from "styles/PagesStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment, editComment } from "../redux/modules/commentList";
+import { deleteComment, editComment } from "../redux/modules/commentListSlice";
 import { getFormattedDate } from "../util/date";
 import CommentItem from "../components/comment/CommentItem";
 // import { defaultAvatar } from "src/assets/default-avatar.png";

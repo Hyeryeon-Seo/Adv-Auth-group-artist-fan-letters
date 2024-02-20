@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CustomInput from "components/common/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
-import { addComment } from "../../redux/modules/commentList"; // import 꼭 해주기!
+import { addComment } from "../../redux/modules/commentListSlice"; // import 꼭 해주기!
 import * as S from "styles/FormSectionStyle";
 import CustomTextarea from "../common/CustomTextarea";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMember } from "../../redux/modules/member";
+import { setMember } from "../../redux/modules/memberSlice";
 import styled, { css } from "styled-components";
 
 function Nav() {
