@@ -1,8 +1,16 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { setAuth } from "../../redux/modules/authSlice";
 
 function Header() {
+	const dispatch = useDispatch();
+
+	const handleLogoutLink = () => {
+		dispatch(setAuth(false));
+	};
+
 	return (
 		<header>
 			<h1>Send 💌 Your Love 💌 to &nbsp; a e s p a</h1>
@@ -11,7 +19,8 @@ function Header() {
 				<HeaderLink Link to="profile">
 					{/* id 넣은 프로필주소로 변경하기 */}내 프로필
 				</HeaderLink>
-				<HeaderLink Link to="login">
+				<HeaderLink Link to="login" onClick={() => handleLogoutLink()}>
+					{/* ()해야 함수실행 잊지말기 */}
 					로그아웃
 				</HeaderLink>
 			</HeaderTextBox>
