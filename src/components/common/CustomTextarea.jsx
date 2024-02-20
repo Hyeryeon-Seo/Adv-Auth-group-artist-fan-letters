@@ -38,8 +38,11 @@ const Textarea = styled.textarea`
 	color: white;
 	width: 450px;
 	height: 200px;
-	border: 3px solid #333030;
-	border-radius: 10px;
+	border: 1px solid #333030;
+	border-radius: 5px;
 	font-size: 20px;
 	margin-left: 30px;
+	outline: none;
+	/* border-width: 0px 0px 1px; */
+	border-color: var(--maincolor);
 `;

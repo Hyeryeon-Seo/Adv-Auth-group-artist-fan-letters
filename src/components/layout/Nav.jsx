@@ -86,5 +86,6 @@ const MemberTabBtn = styled.button`
 		background-color: yellow;
 		color: black;
 		box-shadow: 0px 0px 2px 0px var(--maincolor);
+		transition: 0.4s;
 	}
 `;
