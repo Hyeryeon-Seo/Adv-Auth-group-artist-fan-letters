@@ -2,11 +2,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import commentList from "../modules/commentListSlice";
 import member from "../modules/memberSlice";
+import auth from "../modules/authSlice";
 
 const store = configureStore({
 	reducer: {
 		commentList,
 		member,
+		auth,
 	},
 });
 
