@@ -3,6 +3,138 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 // 전역 스타일링에서 -> 구역 사이즈 적용 (body, header, footer ..)
 // 폰트 이후 수정할 수
+
+// reset.css
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol,
+ul {
+	list-style: none;
+}
+blockquote,
+q {
+	quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: "";
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
 @font-face {
 	font-family: "Pretendard-Light";
 	src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff")
@@ -36,7 +168,8 @@ const GlobalStyle = createGlobalStyle`
 }
 
 :root {
-  --maincolor : #b33cb3;
+  --maincolor : #b86fb8;
+  --subcolor: #dfdfaa;
 }
 
 	body {
@@ -44,6 +177,7 @@ const GlobalStyle = createGlobalStyle`
 	    background-color: #0e0d0d;
 		min-height: 1000px;
 		font-family: "Pretendard-Regular";
+		box-sizing: border-box;
     } 
 
 	* {
@@ -52,17 +186,21 @@ const GlobalStyle = createGlobalStyle`
 
     header {
 		width: 100%;
-        height: 20px; 
-		margin-top: 30px;
+        height: 50px; 
+		/* margin-top: 30px; */
 		padding-top: 10px;
 		padding-bottom:10px;
 		background-color: var(--maincolor);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
     }
 	
 	h1 { // 헤더 제목
-		font-size: 20px;
+		font-size: 35px;
 		font-family: "Pretendard-Black";
 		padding-left: 20px;
+		color: var(--subcolor);
 	}
 
 	h2 { // section의 제목 (Write&Send 등)
@@ -71,6 +209,12 @@ const GlobalStyle = createGlobalStyle`
 		margin: 0px auto 10px 100px;
 		padding-top: 40px;
 	}
+	
+	/* h3 { // '내 프로필', '로그아웃'
+		font-family: "Pretendard-Regular";
+		font-weight: bold;
+		font-size: 18px;
+	} */
 
 	 nav > ul {   
 		display: flex;
@@ -95,7 +239,7 @@ const GlobalStyle = createGlobalStyle`
 	margin-top: 5dpx;
 	width: 600px;
 	height: 530px;
-	color: yellow;
+	color: var(--subcolor);
 	border-radius: 3cm;
 	font-size: 20px;
 	} 
@@ -106,9 +250,13 @@ const GlobalStyle = createGlobalStyle`
 		width: 300px;
 		height: 40px;
 		margin-top: 15px;
-		border: 3px solid #333030;
-		border-radius: 10px;
+		/* border: 1px solid #333030; */
+		/* border: none; */
 		font-size: 20px;
+		/* text-underline-offset: 0.5rem; */
+		outline: none;
+		 border-width: 0px 0px 1px;
+		 border-color: var(--maincolor);
 	}
 
 	select {
@@ -145,6 +293,8 @@ const GlobalStyle = createGlobalStyle`
 		&:hover {
 		background-color: yellow;
 		color:black;
+		transition: 0.3s;
+
 		}
 	}
 
