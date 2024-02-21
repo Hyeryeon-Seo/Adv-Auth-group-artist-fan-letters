@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const commentClient = axios.create({
-	baseURL: "http://localhost:5000/comments",
+	baseURL: process.env.REACT_APP_SERVER_URL,
 	headers: {
 		"Content-Type": "application/json",
 	},
