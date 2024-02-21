@@ -1,39 +1,37 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { dummyData } from "../../shared/fakeData";
 
-const initialState = dummyData;
+// const initialState = dummyData;
 
-// 기존 리듀서
-// const commentList = (state = initialState, action) => {
-// 	switch (action.type) {
-// 		case ADD_COMMENT:
-// 			const newComment = action.payload;
-// 			return [newComment, ...state]; // state.dummyData 말고 그냥 state
-// 		case DELETE_COMMENT:
-// 			const commentId = action.payload;
-// 			return state.filter((comment) => comment.id !== commentId);
-// 		// 왜 초기값 state (더미데이터?)에서 filter? => state는 현상태? 지 초기값아닌듯
-// 		// filter 불변성 유지 가능 (새로운배열반환)
-// 		case EDIT_COMMENT:
-// 			// 아이디, 수정내용 모두 받아야
-// 			// action.payload를 객체상태로 넘겨받아서 키인 id, editingText로 .. 구분할
-// 			const { id, editingText } = action.payload;
-// 			return state.map((comment) => {
-// 				if (comment.id === id) {
-// 					return { ...comment, content: editingText };
-// 				}
-// 				return comment;
-// 			});
-// 		// map메서드 역시 불변성 유지 가능
-// 		default:
-// 			return state;
-// 	}
-// };
+// thunk 를 통해, comment-api (json-server DB 활용)와 연결시키기?
+export const getCommentsThunk = createAsyncThunk("commentList/getComments");
+export const createCommentThunk = createAsyncThunk("commentList/createComment");
+export const deleteCommentThunk = createAsyncThunk("commentList/deleteComment");
+export const updateCommentThunk = createAsyncThunk("commentList/updateComment");
 
 const commentListSlice = createSlice({
 	name: "commentList",
-	initialState,
+	initialState: {
+		comments: [
+			// {
+			// 	createdAt: "2023-11-03T02:07:09.423Z",
+			// 	nickname: "Dr. Clint Christiansen",
+			// 	avatar:
+			// 		"https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/36.jpg",
+			// 	content:
+			// 		"카리나1 Vitae recusandae tenetur debitis impedit ut dolorem atque reprehenderit magnam. Cum dolor magnam commodi qui perferendis. Vel temporibus soluta. Eum delectus blanditiis. Neque dicta non quod ex. Maiores aspernatur fuga reprehenderit a magni eaque fuga voluptatum hic.",
+			// 	writedTo: "카리나",
+			// 	id: "1",
+			// 	userId: "1",
+			// },
+			...dummyData, // json-server db가져오면 없애기
+		],
+	},
 	reducers: {
+		setComments: (state, action) => {
+			const comments = action.payload;
+			return (state.comments = comments); // ?
+		},
 		addComment: (state, action) => {
 			const newComment = action.payload;
 			return [newComment, ...state]; // RTK에선 불변성유지됨 - push로 바꿔보기
@@ -51,6 +49,22 @@ const commentListSlice = createSlice({
 				return comment;
 			});
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(getCommentsThunk.fulfilled, (state, action) => {
+			state.comments = action.payload; // thunk통해 알아서 state도 바꿔주는?
+		});
+
+		builder.addCase(createCommentThunk.fulfilled, (state, action) => {
+			state.comments.push(action.payload);
+		});
+
+		builder.addCase(deleteCommentThunk.fulfilled, (state, action) => {
+			const targetIndex = state.comments.findIndex(
+				(comment) => comment.id === action.payload
+			);
+			state.comments.splice(targetIndex, 1); //
+		});
 	},
 });
 
