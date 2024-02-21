@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Nav from "../layout/Nav";
 import CommentItem from "./CommentItem";
 import * as S from "styles/CommentListItemStyle";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getComments } from "../../api/comment-api";
 
 function CommentList() {
 	const navigate = useNavigate();
-	// 여기서는 상태변경함수없고 단순히 상태를 구독?
-	const commentList = useSelector((state) => state.commentList);
+	const dispatch = useDispatch();
+
+	// useEffect(() => {
+	// 	const data = getComments();
+	// 	// dispatch(setComments(data));
+	// }, []);
+
+	const commentList = useSelector((state) => state.commentList.comments);
 	const activeMember = useSelector((state) => state.member);
 
 	const filteredCommentList = commentList.filter(

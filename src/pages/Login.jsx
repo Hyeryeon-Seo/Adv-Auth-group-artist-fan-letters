@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { setAuth } from "../redux/modules/authSlice";
 import axios from "axios";
-import { postLoggedinUser, postRegisteredUser } from "../api/jwt-api";
+import {
+	jwtInstance,
+	postLoggedinUser,
+	postRegisteredUser,
+} from "../api/jwt-api";
 
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	// console.log(userAuth);
 
 	const [signUpUi, setSignUpUi] = useState(false); // 기본 false: 로그인 창
 	const [id, setId] = useState("");
@@ -21,21 +24,11 @@ const Login = () => {
 	const onToggleLoginSignUp = () => {
 		// useState사용해서 로그인 / 회원가입 창 토글/전환 시키기
 		setSignUpUi(!signUpUi);
-		// console.log(signUpUi);
 	};
 
 	// 로그인 버튼 클릭 시
 	const onSubmitLogin = async (e) => {
 		e.preventDefault();
-
-		// axios사용, 서버에..
-		// const response = await axios.post(
-		// 	`${SERVER_API_URL}/login`,
-		// 	{ id, password },
-		// 	{
-		// 		withCredentials: true,
-		// 	}
-		// );
 
 		postLoggedinUser({ id, password });
 
@@ -49,22 +42,21 @@ const Login = () => {
 	const onSubmitSignUp = (e) => {
 		e.preventDefault();
 
-		if (!nickname) {
-			// input에서 최소1글자 안먹혀서 여기서 유효성검사
-			return alert("닉네임을 입력해주세요!");
-		}
+		// if (!nickname) {
+		// 	// input에서 최소1글자 안먹힘 -> 여기서 유효성검사
+		// 	return alert("닉네임을 입력해주세요!");
+		// }
 
-		postRegisteredUser({
-			// JWT - api
-			id,
-			password,
-			nickname, //단축속성명
-			// 혹시나해서 "id" : id 해봤지만 상관 x (""는 json이라그런거고 어쩌피 넣을때객체?)
-		});
+		// JWT - api - 회원가입
+		const resMessage = postRegisteredUser(id, password, nickname); // ,마지막에 붙여 에러남
+		console.log(resMessage);
 
-		// 회원가입에 성공할 시 (response.data 완료메세지받음) 로그인 모드로 전환
+		// 회원가입 성공시 userAccountSlice - setUserAccount 하기  (acc..Token, id, nickname)
+		// 회원가입 성공 시 (response.data 완료메세지받음) 로그인 모드로 전환
+		// if (resMessage === "회원가입 완료") {
 		alert("회원가입에 성공했습니다!");
 		setSignUpUi(false);
+		// }
 		// failed 메세지 뜨는 경우 (이미 기존 가입한 경우 등)
 	};
 
@@ -83,6 +75,7 @@ const Login = () => {
 									setId(e.target.value);
 								}}
 								placeholder="아이디를 입력해주세요."
+								required
 							/>
 							<input
 								type="password"
@@ -91,6 +84,7 @@ const Login = () => {
 									setPassword(e.target.value);
 								}}
 								placeholder="비밀번호를 입력해주세요."
+								required
 							/>
 							<button type="submit">로그인</button>
 							<SignUpText onClick={() => onToggleLoginSignUp()}>
@@ -111,6 +105,7 @@ const Login = () => {
 							placeholder="아이디 (4 ~ 10 글자)"
 							minLength={4}
 							maxLength={10}
+							required
 						/>
 						<input
 							type="password"
@@ -121,6 +116,7 @@ const Login = () => {
 							placeholder="비밀번호 (4 ~ 15 글자)"
 							minLength={4}
 							maxLength={15}
+							required
 						/>
 						<input
 							type="text"
@@ -131,6 +127,7 @@ const Login = () => {
 							placeholder="닉네임 (1 ~ 10 글자)"
 							minLength={1} // 2부턴 먹히는데 1은 안먹힘 (아무것도입력안해도되는문제->우선 onsubmit함수에 유효성검사)
 							maxLength={10}
+							required
 						/>
 						<button type="submit">회원 가입</button>
 						<SignUpText onClick={() => onToggleLoginSignUp()}>

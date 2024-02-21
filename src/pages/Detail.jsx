@@ -13,7 +13,7 @@ import useNavigateLogin from "../hooks/useNavigateLogin";
 
 function Detail() {
 	const dispatch = useDispatch();
-	const commentList = useSelector((state) => state.commentList);
+	const commentList = useSelector((state) => state.commentList.comments);
 
 	const [isEditing, setIsEditing] = useState(false);
 	const [editingText, setEditingText] = useState("");
