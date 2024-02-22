@@ -2,13 +2,13 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { setAuth } from "../../redux/modules/authSlice";
+import { logout } from "../../redux/modules/authSlice";
 
 function Header() {
 	const dispatch = useDispatch();
 
 	const handleLogoutLink = () => {
-		dispatch(setAuth(false));
+		dispatch(logout());
 	};
 
 	return (

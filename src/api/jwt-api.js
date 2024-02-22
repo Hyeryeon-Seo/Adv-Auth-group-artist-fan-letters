@@ -31,10 +31,11 @@ const postRegisteredUser = async (id, password, nickname) => {
 
 // 로그인
 const postLoggedinUser = // + thunk 함수 ?createAsyncThunk("auth/postLoggedinUser",
-	async (LoggedinUser) => {
-		// 로그인한 회원정보(id,pwd) 넣고 -> DB와 일치 시 accessToken 등 유저정보 응답받음
+	async (id, password) => {
+		// 로그인한 회원정보(id,pwd) 넣고 -> DB와 일치 시 accessToken, userId, avatar, nickname 등 유저정보 응답받음
 		// + (accessToken저장은 Login.jsx에서 보내서 redux모듈 authSlice가 처리하도록함)
-		const { data } = await authApi.post("/login", LoggedinUser);
+		const loggedinUser = { id, password };
+		const { data } = await authApi.post("/login", loggedinUser);
 		return data;
 	};
 

@@ -15,8 +15,6 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const [nickname, setNickname] = useState("");
 
-	// postLoggedinUser({ id: "developer", password: "developer" });
-
 	const onToggleLoginSignUp = () => {
 		// useState사용해서 로그인 / 회원가입 창 토글/전환 시키기
 		setIsLoginMode(!isLoginMode);
@@ -28,10 +26,13 @@ const Login = () => {
 		e.preventDefault();
 		// JWT - api - 로그인
 		try {
-			const data = await postLoggedinUser({ id, password });
+			const data = await postLoggedinUser(id, password);
+			console.log(data);
+			const { accessToken, avatar, nickname, userId } = data; // 구분할
+			console.log(accessToken, avatar, nickname, userId);
 			// NOTE 로그인 성공 시 로그인 상태 변경 & 홈화면 이동
 			if (data.success) {
-				dispatch(login(data.accessToken));
+				dispatch(login({ accessToken, avatar, nickname, userId }));
 				alert("로그인 되었어요! 팬레터 쓰러 가보실까요? ♡⸜(˶˃ ᵕ ˂˶)⸝♡");
 				navigate("/");
 			}
@@ -46,7 +47,6 @@ const Login = () => {
 		// JWT - api - 회원가입
 		try {
 			const data = await postRegisteredUser(id, password, nickname); // ,마지막에 붙여 에러남
-			// TODO 회원가입 성공시 userxccountSlice - setUserAccount 하기  (acc..Token, id, nickname)
 			// 회원가입 성공 시 로그인 모드로 전환
 			if (data.success) {
 				setIsLoginMode(true);
