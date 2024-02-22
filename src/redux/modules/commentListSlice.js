@@ -14,7 +14,7 @@ export const __getComments = createAsyncThunk(
 	async (payload, thunkAPI) => {
 		try {
 			// try-catch문도 포함시킴
-			const comments = await getCommentsFromDB();
+			const comments = await getCommentsFromDB(); // comments는 배열
 			console.log("comments : ", comments);
 			return comments; // 리듀서로 넘겨주기
 		} catch (err) {
@@ -66,9 +66,7 @@ export const __updateComment = createAsyncThunk(
 const commentListSlice = createSlice({
 	name: "comment", // 다른 곳에서 useSeletor((state) => )가져올때 state.뒤 쓰는 이름 아님! state.뒤에는 store에 쓴 걸로 가져와야
 	initialState: {
-		commentsData: [
-			// ...dummyData, // json-server db가져오면 없애기
-		],
+		commentsData: [], // ...dummyData, // json-server db가져오면 없애기
 		isLoading: true, // json-server api 요청 (thunk로?) 후 받은 응답값에 따라 바뀐다
 		isError: false,
 		error: null,
@@ -100,10 +98,13 @@ const commentListSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(__getComments.fulfilled, (state, action) => {
-				state.comment.commentsData.push(action.payload); // thunk통해 알아서 state도 바꿔주는?
+				// comments(배열)를 action.payload로 넘겨받아
+				// console.log(...action.payload);
+				state.commentsData = action.payload; // thunk통해 알아서 state도 바꿔주는? // 에러 해결ㅠㅠ 다른 곳에서 useSelector할때처럼 state.comments.commentsData가 아니라
+				// 현재 이 state에서의 (얘가 commentListSlice함수 안이라서).commentsData !
 			})
 			.addCase(__createComment.fulfilled, (state, action) => {
-				state.comments.commentsData.push(action.payload);
+				state.comments.commentsData.unshift(action.payload);
 			})
 			.addCase(__deleteComment.fulfilled, (state, action) => {
 				const targetIndex = state.comments.findIndex(

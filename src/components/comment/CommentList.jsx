@@ -32,7 +32,6 @@ function CommentList() {
 
 	useEffect(() => {
 		dispatch(__getComments());
-		// set;
 	}, [dispatch]);
 
 	if (!commentList) {

@@ -62,6 +62,15 @@
       "content": "ㅇㄹㄴㅇㄹㄴ",
       "writedTo": "윈터",
       "userId": "1234"
+    },
+    {
+      "id": "a70a7248-3b71-4283-86ff-36b68bee794b",
+      "createdAt": "24. 2. 22. 오후 10:05:50",
+      "nickname": "1234",
+      "avatar": "https://react-jwt-avatar.s3.ap-northeast-2.amazonaws.com/24-02-21/fd06ecf9-f5ed-428c-b65a-0f8a3566fe2f.jpg",
+      "content": "adfa",
+      "writedTo": "카리나",
+      "userId": "1234"
     }
   ]
 }
