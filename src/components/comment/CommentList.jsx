@@ -15,7 +15,8 @@ function CommentList() {
 	// 	// dispatch(setComments(data));
 	// }, []);
 
-	const commentList = useSelector((state) => state.commentList.comments);
+	const commentList = useSelector((state) => state.comments.commentsData); // commentList를 못가져오는 문제가 있는데.. 콘솔에 다른 두개가 찍힌다 혹시나 하여 이름변경?
+	// 어쩌피 의미 x일지도. 여튼   state.store의 리듀서들중 이름, . initial state안 키값
 	const activeMember = useSelector((state) => state.member);
 
 	console.log(commentList);
@@ -31,7 +32,12 @@ function CommentList() {
 
 	useEffect(() => {
 		dispatch(__getComments());
+		// set;
 	}, [dispatch]);
+
+	if (!commentList) {
+		<p>Loading ...</p>;
+	}
 
 	return (
 		<S.ListSection>

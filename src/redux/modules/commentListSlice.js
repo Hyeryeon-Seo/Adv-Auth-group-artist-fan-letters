@@ -10,25 +10,25 @@ import {
 
 // thunk 를 통해, comment-api (json-server DB 활용)와 연결시키기?
 export const __getComments = createAsyncThunk(
-	"commentList/getComments",
+	"comment/getComments",
 	async (payload, thunkAPI) => {
 		try {
 			// try-catch문도 포함시킴
 			const comments = await getCommentsFromDB();
 			console.log("comments : ", comments);
-			return comments;
+			return comments; // 리듀서로 넘겨주기
 		} catch (err) {
-			return thunkAPI.rejectWithValue(err);
+			return thunkAPI.rejectWithValue(err); // 이렇게 써주면(문법), err에러객체가 extraReducers로 자동으로 넘어감 (거기서쓰는 state.erorr로)
 		}
 	}
 );
 
 export const __createComment = createAsyncThunk(
-	"commentList/createComment",
+	"comment/createComment",
 	async (newComment, thunkAPI) => {
 		try {
 			await createComment(newComment);
-			const comments = await getCommentsFromDB();
+			const comments = await getCommentsFromDB(); // DB와 UI 동기화위해, new letter(comment)가 추가된 DB를 가져온다
 			return comments;
 		} catch (err) {
 			return thunkAPI.rejectWithValue(err);
@@ -37,8 +37,9 @@ export const __createComment = createAsyncThunk(
 );
 
 export const __deleteComment = createAsyncThunk(
-	"commentList/deleteComment",
+	"comment/deleteComment",
 	async (payload, thunkAPI) => {
+		// payload creator
 		try {
 			await deleteComment;
 			const comments = await getCommentsFromDB;
@@ -51,7 +52,7 @@ export const __deleteComment = createAsyncThunk(
 );
 
 export const __updateComment = createAsyncThunk(
-	"commentList/updateComment",
+	"comment/updateComment",
 	async ({ id, editingText }, thunkAPI) => {
 		try {
 			await updateComment(id, editingText);
@@ -63,10 +64,10 @@ export const __updateComment = createAsyncThunk(
 );
 
 const commentListSlice = createSlice({
-	name: "commentList",
+	name: "comment", // 다른 곳에서 useSeletor((state) => )가져올때 state.뒤 쓰는 이름 아님! state.뒤에는 store에 쓴 걸로 가져와야
 	initialState: {
-		comments: [
-			...dummyData, // json-server db가져오면 없애기
+		commentsData: [
+			// ...dummyData, // json-server db가져오면 없애기
 		],
 		isLoading: true, // json-server api 요청 (thunk로?) 후 받은 응답값에 따라 바뀐다
 		isError: false,
@@ -97,20 +98,19 @@ const commentListSlice = createSlice({
 		// },
 	},
 	extraReducers: (builder) => {
-		builder.addCase(__getComments.fulfilled, (state, action) => {
-			state.comments = action.payload; // thunk통해 알아서 state도 바꿔주는?
-		});
-
-		builder.addCase(__createComment.fulfilled, (state, action) => {
-			state.comments.push(action.payload);
-		});
-
-		builder.addCase(__deleteComment.fulfilled, (state, action) => {
-			const targetIndex = state.comments.findIndex(
-				(comment) => comment.id === action.payload
-			);
-			state.comments.splice(targetIndex, 1); //
-		});
+		builder
+			.addCase(__getComments.fulfilled, (state, action) => {
+				state.comment.commentsData.push(action.payload); // thunk통해 알아서 state도 바꿔주는?
+			})
+			.addCase(__createComment.fulfilled, (state, action) => {
+				state.comments.commentsData.push(action.payload);
+			})
+			.addCase(__deleteComment.fulfilled, (state, action) => {
+				const targetIndex = state.comments.findIndex(
+					(comment) => comment.id === action.payload
+				);
+				state.comments.commentsData.splice(targetIndex, 1); //
+			});
 	},
 });
 // [__getComments.pending]: (state, action) => {

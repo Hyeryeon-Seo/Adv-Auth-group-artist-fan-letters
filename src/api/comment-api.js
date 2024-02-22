@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const commentClient = axios.create({
-	baseURL: import.meta.env.REACT_APP_SERVER_URL,
+	baseURL: "http://localhost:5000/comments",
+	// process.env.REACT_APP_SERVER_URL,
 	headers: {
 		"Content-Type": "application/json",
 	},
@@ -9,7 +10,8 @@ export const commentClient = axios.create({
 
 export const getCommentsFromDB = async () => {
 	// 시간 순 정렬해서 가져오기
-	const data = await commentClient.get("/");
+	const { data } = await commentClient.get("/");
+	// console.log(import.meta.env.REACT_APP_SERVER_URL);
 	console.log(data);
 	// get("?_sort=createdAt&_order=desc");
 	return data;
