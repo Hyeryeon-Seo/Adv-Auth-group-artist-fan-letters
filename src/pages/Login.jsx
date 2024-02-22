@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { setAuth } from "../redux/modules/authSlice";
-import axios from "axios";
-import {
-	jwtInstance,
-	postLoggedinUser,
-	postRegisteredUser,
-} from "../api/jwt-api";
+import { login } from "../redux/modules/authSlice";
+import { postLoggedinUser, postRegisteredUser } from "../api/jwt-api";
 
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const [signUpUi, setSignUpUi] = useState(false); // 기본 false: 로그인 창
+	const [isLoginMode, setIsLoginMode] = useState(true); // 기본 true: 로그인 창
+	// TODO id,pwd,nick.. 세 state 한꺼번에 객체형태로 state만들기?
 	const [id, setId] = useState("");
 	const [password, setPassword] = useState("");
 	const [nickname, setNickname] = useState("");
@@ -23,48 +19,53 @@ const Login = () => {
 
 	const onToggleLoginSignUp = () => {
 		// useState사용해서 로그인 / 회원가입 창 토글/전환 시키기
-		setSignUpUi(!signUpUi);
+		setIsLoginMode(!isLoginMode);
 	};
 
-	// 로그인 버튼 클릭 시
+	// NOTE 로그인 버튼 클릭 시
 	const onSubmitLogin = async (e) => {
+		// * 여기에도 async await 써주기!
 		e.preventDefault();
-
-		postLoggedinUser({ id, password });
-
-		// NOTE 로그인 성공 시 로그인 상태 변경 -> 홈화면 이동
-		// +추가하기!
-		dispatch(setAuth(true));
-		navigate("/");
+		// JWT - api - 로그인
+		try {
+			const data = await postLoggedinUser({ id, password });
+			// NOTE 로그인 성공 시 로그인 상태 변경 & 홈화면 이동
+			if (data.success) {
+				dispatch(login(data.accessToken));
+				alert("로그인 되었어요! 팬레터 쓰러 가보실까요? ♡⸜(˶˃ ᵕ ˂˶)⸝♡");
+				navigate("/");
+			}
+		} catch (err) {
+			alert(err.response.data.message + " ㅠ_ㅠ 다시 시도해주세요!"); // 서버로부터 오는 에러메세지 뜨게하기
+		}
 	};
 
-	// 회원가입 버튼 클릭 시
-	const onSubmitSignUp = (e) => {
+	// NOTE 회원가입 버튼 클릭 시
+	const onSubmitSignUp = async (e) => {
 		e.preventDefault();
-
-		// if (!nickname) {
-		// 	// input에서 최소1글자 안먹힘 -> 여기서 유효성검사
-		// 	return alert("닉네임을 입력해주세요!");
-		// }
-
 		// JWT - api - 회원가입
-		const resMessage = postRegisteredUser(id, password, nickname); // ,마지막에 붙여 에러남
-		console.log(resMessage);
-
-		// 회원가입 성공시 userAccountSlice - setUserAccount 하기  (acc..Token, id, nickname)
-		// 회원가입 성공 시 (response.data 완료메세지받음) 로그인 모드로 전환
-		// if (resMessage === "회원가입 완료") {
-		alert("회원가입에 성공했습니다!");
-		setSignUpUi(false);
-		// }
-		// failed 메세지 뜨는 경우 (이미 기존 가입한 경우 등)
+		try {
+			const data = await postRegisteredUser(id, password, nickname); // ,마지막에 붙여 에러남
+			// TODO 회원가입 성공시 userxccountSlice - setUserAccount 하기  (acc..Token, id, nickname)
+			// 회원가입 성공 시 로그인 모드로 전환
+			if (data.success) {
+				setIsLoginMode(true);
+				// TODO 폼 리셋시키는 방법 바꾸기
+				setId(""); // 안해주면 토글되어도,혹은 다시 회원가입창가도 그대로 떠있다
+				setPassword("");
+				setNickname("");
+				alert("회원가입에 성공했어요! 로그인 해주세요 ~ ( ˶ˆ ᗜ ˆ˵ )");
+			}
+		} catch (err) {
+			alert(err.response.data.message + " ㅠ_ㅠ 다시 시도해주세요!");
+		}
 	};
 
 	return (
 		<div>
 			<LoginWrapper>
 				<HomeBtn onClick={() => navigate("/")}>&larr; HOME</HomeBtn>
-				{!signUpUi ? ( // 로그인 / 회원가입 토글
+				{isLoginMode ? ( // 로그인 / 회원가입 토글
 					<>
 						<LogInForm onSubmit={onSubmitLogin}>
 							<Title>로그인</Title>

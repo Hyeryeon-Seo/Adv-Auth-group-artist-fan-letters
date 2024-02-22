@@ -1,17 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { postLoggedinUser } from "../../api/jwt-api";
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState: {
-		isLogin: false, // 유저 로그인상태 - 처음은 로그인 x상태
+		// 토큰 저장한게 남아있다면 'true'로 판단, 로그아웃 상태로 localStroage clear되어 안에 없으면 'false'로 판단
+		// 로그아웃안하면 유지됨 (새로고침해도)
+		isLogin: !!localStorage.getItem("accessToken"),
 		// status: "idle", // loading, succeeded, failed
 		// error: null, // 요청 실패 시 에러 메세지 저장
 	},
 	reducers: {
-		setAuth: (state, action) => {
-			const userAuth = action.payload; // true, false 받아서
-			return { isLogin: userAuth };
+		login: (state, action) => {
+			const accessToken = action.payload; // accessToken 을 payload로 받아서 여기 redux 리듀서에서 localStorage 처리
+			localStorage.setItem("accessToken", accessToken);
+			state.isLogin = true;
+		},
+		logout: (state, action) => {
+			state.isLogin = false;
+			localStorage.clear();
 		},
 	},
 	// + thunk?
@@ -33,5 +39,5 @@ const authSlice = createSlice({
 	// },
 });
 
+export const { login, logout } = authSlice.actions;
 export default authSlice.reducer;
-export const { setAuth } = authSlice.actions;

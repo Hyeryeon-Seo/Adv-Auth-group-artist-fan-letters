@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const jwtInstance = axios.create({
+const authApi = axios.create({
 	baseURL: "https://moneyfulpublicpolicy.co.kr",
 	headers: {
 		"Content-Type": "application/json",
@@ -12,7 +12,7 @@ const jwtInstance = axios.create({
 const getUserInfo = async (accessToken) => {
 	// accessToken이 유효한 경우 비번제외한 회원정보 응답
 	// ?
-	const { data } = await jwtInstance.get("/user", {
+	const { data } = await authApi.get("/user", {
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${accessToken}`,
@@ -22,13 +22,10 @@ const getUserInfo = async (accessToken) => {
 };
 
 // 회원가입
+// 회원가입한 회원정보 넣기 (아이디, 비번, 닉네임)
 const postRegisteredUser = async (id, password, nickname) => {
-	console.log(id, password, nickname);
-	// 회원가입한 회원정보 넣기 (아이디, 비번, 닉네임)
-	const registeredUser = { id: id, password: password, nickname: nickname }; // 단축속성명
-	const { data } = await jwtInstance.post("/register", registeredUser);
-	// console.log(data); // {message: '회원가입 완료', success: true} 인데 반환해서 login.jsx에서 출력해보면 Promise로 뜸
-	// if (data.message === "회원가입 완료") {
+	const registeredUser = { id, password, nickname }; // 단축속성명
+	const { data } = await authApi.post("/register", registeredUser);
 	return data;
 };
 
@@ -36,15 +33,15 @@ const postRegisteredUser = async (id, password, nickname) => {
 const postLoggedinUser = // + thunk 함수 ?createAsyncThunk("auth/postLoggedinUser",
 	async (LoggedinUser) => {
 		// 로그인한 회원정보(id,pwd) 넣고 -> DB와 일치 시 accessToken 등 유저정보 응답받음
-		const { data } = await jwtInstance.post("/login", LoggedinUser);
-		// console.log(data); // {accessToken: .. , userId: ..., ..}
-		localStorage.setItem("loggedInUserToken", data.accessToken); // 로컬스토리지에 토큰 저장
+		// + (accessToken저장은 Login.jsx에서 보내서 redux모듈 authSlice가 처리하도록함)
+		const { data } = await authApi.post("/login", LoggedinUser);
+		return data;
 	};
 
 // 프로필 변경  - 추가하기
 
 // axios - interceptor
-jwtInstance.interceptors.request.use(
+authApi.interceptors.request.use(
 	function (config) {
 		// 요청 보내기 전 수행
 		console.log("인터셉트 요청 성공!");
@@ -57,7 +54,7 @@ jwtInstance.interceptors.request.use(
 	}
 );
 
-jwtInstance.interceptors.response.use(
+authApi.interceptors.response.use(
 	function (response) {
 		console.log("인터셉트 응답 받았어요!");
 		// 정상 응답
@@ -71,4 +68,4 @@ jwtInstance.interceptors.response.use(
 	}
 );
 
-export { jwtInstance, getUserInfo, postRegisteredUser, postLoggedinUser };
+export { getUserInfo, postRegisteredUser, postLoggedinUser };
