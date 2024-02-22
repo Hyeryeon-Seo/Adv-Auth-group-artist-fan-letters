@@ -5,7 +5,10 @@ import Footer from "../components/layout/Footer";
 import { useParams } from "react-router-dom";
 import * as S from "styles/PagesStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment, editComment } from "../redux/modules/commentListSlice";
+import {
+	__deleteComment,
+	__updateComment,
+} from "../redux/modules/commentListSlice";
 import { getFormattedDate } from "../util/date";
 import CommentItem from "../components/comment/CommentItem";
 import useNavigateLogin from "../hooks/useNavigateLogin";
@@ -31,7 +34,7 @@ function Detail() {
 	// 삭제
 	const handleDeleteCommentBtn = () => {
 		if (window.confirm("정말 삭제하실 건가요?")) {
-			dispatch(deleteComment(id)); // ijmport 잊지말기
+			dispatch(__deleteComment(id)); // ijmport 잊지말기
 			alert("팬레터가 삭제되었습니다");
 			// 홈화면으로 이동
 			navigate("/");
@@ -47,13 +50,13 @@ function Detail() {
 		// id 인자로 받을 필요가 없는게, 그냥 이 detail페이지 받아온 id 바로 쓰면됨 (?)
 		if (!editingText) return alert("수정사항이 없습니다");
 
-		dispatch(editComment({ id, editingText }));
+		dispatch(__updateComment({ id, editingText }));
 		setIsEditing(false);
 		setEditingText("");
 	};
 
 	// custom hook 사용 - 로그인 안한 상태일 시 로그인페이지로 이동
-	useNavigateLogin();
+	// useNavigateLogin();
 
 	return (
 		<S.LayoutDiv>
@@ -70,7 +73,7 @@ function Detail() {
 					pageName="detail"
 					isEditing={isEditing}
 					textareaChange={handleEditingTextChange}
-				></CommentItem>
+				/>
 				{isEditing ? (
 					<S.DetailBtnBox>
 						{/* <S.DetailTextarea
