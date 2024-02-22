@@ -4,7 +4,7 @@ import CommentItem from "./CommentItem";
 import * as S from "styles/CommentListItemStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getComments } from "../../api/comment-api";
+import { __getComments } from "../../redux/modules/commentListSlice";
 
 function CommentList() {
 	const navigate = useNavigate();
@@ -18,6 +18,8 @@ function CommentList() {
 	const commentList = useSelector((state) => state.commentList.comments);
 	const activeMember = useSelector((state) => state.member);
 
+	console.log(commentList);
+
 	const filteredCommentList = commentList.filter(
 		(comment) => comment.writedTo === activeMember
 	);
@@ -26,6 +28,10 @@ function CommentList() {
 	const handleCommentClick = (id) => {
 		navigate(`detail/${id}`);
 	};
+
+	useEffect(() => {
+		dispatch(__getComments());
+	}, [dispatch]);
 
 	return (
 		<S.ListSection>

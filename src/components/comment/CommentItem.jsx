@@ -1,17 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import * as S from "styles/CommentListItemStyle";
 import { getFormattedDate } from "../../util/date";
 
 function CommentItem({ comment, pageName, isEditing, textareaChange }) {
 	// 에러해결중: 새로추가한 comment의 id 문자열형태로 잘 들어가는 것 확인
 	// commentList -> CommentItem : props 사용
-	const { avatar, nickname, createdAt, content } = comment;
-
-	// NOTE 각각의 Comment에 맞는 상세페이지로 이동
-	// const handleCommentClick = (id) => {
-	// 	navigate(`detail/${id}`);
-	// };
+	const { id, avatar, nickname, createdAt, content } = comment;
 
 	return (
 		<>
@@ -19,7 +13,11 @@ function CommentItem({ comment, pageName, isEditing, textareaChange }) {
 			<S.CommentTextBox $detail={pageName}>
 				<S.CommentNameDateBox $detail={pageName}>
 					<h5>{nickname}</h5>
-					<time>{getFormattedDate(createdAt)}</time>
+					{id >= 1 && id <= 5 ? ( // dummyData의 날짜 처리해주기 - comment id of dummyData : 1 ~ 5
+						<time>{getFormattedDate(createdAt)}</time>
+					) : (
+						<time>{createdAt}</time> // non-dummyData
+					)}
 				</S.CommentNameDateBox>
 				{/* 이중 삼항연산자 */}
 				{pageName === "detail" ? (

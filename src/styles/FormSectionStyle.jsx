@@ -32,3 +32,9 @@ export const AddBtn = styled.button`
 	font-size: 20px;
 	height: 80px;
 `;
+
+export const NameWrapper = styled.div`
+	display: flex;
+	gap: 20px;
+	margin-top: 20px;
+`;

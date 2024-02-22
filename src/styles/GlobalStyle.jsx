@@ -266,9 +266,9 @@ table {
 		border-radius: 10px;
 		font-size: 20px;
 		font-weight: bold;
-		box-shadow: 0px 0px 10px 0px yellow;
-		color:white;
-		background-color: black;
+		box-shadow: 0px 0px 5px 0px var(--subcolor);
+		color:black;
+		background-color: var(--maincolor);
 		padding-left: 20px;
 	}
 
@@ -291,7 +291,7 @@ table {
 		margin-bottom: 20px;
 		background-color: var(--maincolor);
 		&:hover {
-		background-color: yellow;
+		background-color: #f3f347;
 		color:black;
 		transition: 0.3s;
 
